@@ -9,4 +9,22 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="button_name_1">1</string>
+    <string name="button_send">Send</string>
+    <string name="button_name_0">0</string>
+    <string name="button_name_2">2</string>
+    <string name="button_name_3">3</string>
+    <string name="button_name_4">4</string>
+    <string name="button_name_5">5</string>
+    <string name="button_name_6">6</string>
+    <string name="button_name_7">7</string>
+    <string name="button_name_8">8</string>
+    <string name="button_name_9">9</string>
+    <string name="button_name_division">÷</string>
+    <string name="buttum_name_multiply">×</string>
+    <string name="button_name_equal">=</string>
+    <string name="button_name_minus">-</string>
+    <string name="button_name_plus">+</string>
+    <string name="button_name_clear">CLEAR</string>
+    <string name="my_calculator">Hello First Caculator!</string>
 </resources>
