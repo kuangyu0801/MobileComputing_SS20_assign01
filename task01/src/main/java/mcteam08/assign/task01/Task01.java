@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -35,6 +36,9 @@ public class Task01 extends AppCompatActivity {
     private float result = 0;
     private StringBuffer inputStr = new StringBuffer(); // used to store the input string
     private LinkedList<String> optList = new LinkedList();
+    private TextView textViewDisplay;
+    //private TextView textViewDisplay = (TextView) findViewById(R.id.textViewDisplay);
+
 
     private float calculate(float pre, float cur, String opt) {
 
@@ -54,6 +58,7 @@ public class Task01 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task01);
+        textViewDisplay = findViewById(R.id.textViewDisplay);
 
         numButtons[0] = findViewById(R.id.buttonNum0);
         numButtons[0].setOnClickListener(new View.OnClickListener(){
@@ -61,8 +66,11 @@ public class Task01 extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "0 entered");
                 inputStr.append("0");
+                textViewDisplay.setText(inputStr.toString());
             }
         });
+
+
 
         numButtons[1] = findViewById(R.id.buttonNum1);
         numButtons[1].setOnClickListener(new View.OnClickListener() {
@@ -70,6 +78,7 @@ public class Task01 extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "1 entered");
                 inputStr.append("1");
+                textViewDisplay.setText(inputStr.toString());
             }
         });
 
@@ -79,6 +88,7 @@ public class Task01 extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "2 entered");
                 inputStr.append("2");
+                textViewDisplay.setText(inputStr.toString());
             }
         });
 
@@ -88,6 +98,7 @@ public class Task01 extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "3 entered");
                 inputStr.append("3");
+                textViewDisplay.setText(inputStr.toString());
             }
         });
 
@@ -97,6 +108,7 @@ public class Task01 extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "4 entered");
                 inputStr.append("4");
+                textViewDisplay.setText(inputStr.toString());
             }
         });
 
@@ -106,6 +118,7 @@ public class Task01 extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "5 entered");
                 inputStr.append("5");
+                textViewDisplay.setText(inputStr.toString());
             }
         });
 
@@ -115,6 +128,7 @@ public class Task01 extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "6 entered");
                 inputStr.append("6");
+                textViewDisplay.setText(inputStr.toString());
             }
         });
 
@@ -124,6 +138,7 @@ public class Task01 extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "7 entered");
                 inputStr.append("7");
+                textViewDisplay.setText(inputStr.toString());
             }
         });
 
@@ -133,6 +148,7 @@ public class Task01 extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "8 entered");
                 inputStr.append("8");
+                textViewDisplay.setText(inputStr.toString());
             }
         });
 
@@ -142,6 +158,7 @@ public class Task01 extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "9 entered");
                 inputStr.append("9");
+                textViewDisplay.setText(inputStr.toString());
             }
         });
 
@@ -157,6 +174,7 @@ public class Task01 extends AppCompatActivity {
                 if (!inNumStr.isEmpty()) {
                     optList.addLast(inNumStr);
                     optList.addLast(OPT[4]);
+                    textViewDisplay.setText(inNumStr + OPT[4]);
                 }
 
                 float curNum = 0;
@@ -172,6 +190,7 @@ public class Task01 extends AppCompatActivity {
                         // equal
                         if (s.equals(OPT[4])) {
                             result = curNum;
+                            textViewDisplay.setText(String.valueOf(result));
                             break;
                         } else {
                             curOpt = s;
@@ -203,6 +222,7 @@ public class Task01 extends AppCompatActivity {
                     optList.addLast(inNumStr);
                     optList.addLast(OPT[0]);
                     inputStr.setLength(0);
+                    textViewDisplay.setText(inNumStr + OPT[0]);
                 }
             }
         });
@@ -211,7 +231,17 @@ public class Task01 extends AppCompatActivity {
         optButtons[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, OPT[1] + " entered");
+                String inNumStr = inputStr.toString();
+                Log.i(TAG, "input number: " + inNumStr);
 
+                // this means button no numbers has been entered before this operation
+                if (!inNumStr.isEmpty()) {
+                    optList.addLast(inNumStr);
+                    optList.addLast(OPT[1]);
+                    inputStr.setLength(0);
+                    textViewDisplay.setText(inNumStr + OPT[1]);
+                }
             }
         });
 
@@ -219,7 +249,17 @@ public class Task01 extends AppCompatActivity {
         optButtons[3].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, OPT[2] + " entered");
+                String inNumStr = inputStr.toString();
+                Log.i(TAG, "input number: " + inNumStr);
 
+                // this means button no numbers has been entered before this operation
+                if (!inNumStr.isEmpty()) {
+                    optList.addLast(inNumStr);
+                    optList.addLast(OPT[2]);
+                    inputStr.setLength(0);
+                    textViewDisplay.setText(inNumStr + OPT[2]);
+                }
             }
         });
 
@@ -227,7 +267,17 @@ public class Task01 extends AppCompatActivity {
         optButtons[4].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, OPT[3] + " entered");
+                String inNumStr = inputStr.toString();
+                Log.i(TAG, "input number: " + inNumStr);
 
+                // this means button no numbers has been entered before this operation
+                if (!inNumStr.isEmpty()) {
+                    optList.addLast(inNumStr);
+                    optList.addLast(OPT[3]);
+                    inputStr.setLength(0);
+                    textViewDisplay.setText(inNumStr + OPT[3]);
+                }
             }
         });
 
@@ -239,6 +289,7 @@ public class Task01 extends AppCompatActivity {
                 result = 0;
                 optList.clear();
                 inputStr.setLength(0);
+                textViewDisplay.setText(R.string.button_name_0);
             }
         });
 
