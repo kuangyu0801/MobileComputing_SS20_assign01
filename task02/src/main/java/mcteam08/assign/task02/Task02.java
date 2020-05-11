@@ -1,5 +1,8 @@
 package mcteam08.assign.task02;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -8,15 +11,22 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.IBinder;
+import android.os.RemoteException;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class Task02 extends AppCompatActivity {
+public class Task02 extends AppCompatActivity implements ServiceConnection {
+    final private String TAG = Task02.class.getCanonicalName();
+    private ISensorReaderService sensorReaderProxy = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "Activity Created");
         setContentView(R.layout.activity_task02);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -25,10 +35,19 @@ public class Task02 extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                String str = null;
+                try {
+                    str = sensorReaderProxy.getHelloWorld();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                Snackbar.make(view, str, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
+
+        Intent i = new Intent(this, SensorReaderService.class);
+        bindService(i, this, BIND_AUTO_CREATE);
     }
 
     @Override
@@ -51,5 +70,17 @@ public class Task02 extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        Log.i(TAG, "Service connected");
+        sensorReaderProxy = ISensorReaderService.Stub.asInterface(service);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        Log.i(TAG, "Service disconnected");
+        sensorReaderProxy = null;
     }
 }
