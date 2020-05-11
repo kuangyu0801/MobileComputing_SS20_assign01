@@ -38,6 +38,14 @@ public class Task02 extends AppCompatActivity implements ServiceConnection {
                 String str = null;
                 try {
                     str = sensorReaderProxy.getHelloWorld();
+                    float[] gyroStatics = sensorReaderProxy.getSensorGyroscope();
+                    Log.i(TAG, "Receive X-axis: " + gyroStatics[0]);
+                    Log.i(TAG, "Receive Y-axis: " + gyroStatics[1]);
+                    Log.i(TAG, "Receive Z-axis: " + gyroStatics[2]);
+                    float[] accStatics = sensorReaderProxy.getSensorAccelerometer();
+                    Log.i(TAG, "Receive X-axis: " + accStatics[0]);
+                    Log.i(TAG, "Receive Y-axis: " + accStatics[1]);
+                    Log.i(TAG, "Receive Z-axis: " + accStatics[2]);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }

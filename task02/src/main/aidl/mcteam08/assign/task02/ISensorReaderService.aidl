@@ -9,4 +9,7 @@ interface ISensorReaderService {
      * and return values in AIDL.
      */
     String getHelloWorld();
+    float[] getSensorGyroscope();
+    float[] getSensorAccelerometer();
+    int setSamplePeriod(int period);
 }
