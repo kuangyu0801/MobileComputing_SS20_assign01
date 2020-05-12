@@ -9,4 +9,12 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="tv_name_gyroX">gyroX</string>
+    <string name="tv_name_gyroY">gyroY</string>
+    <string name="tv_name_gyroZ">gyroZ</string>
+    <string name="tv_name_accZ">accZ</string>
+    <string name="tv_name_accX">accX</string>
+    <string name="tv_name_longitude">longitude</string>
+    <string name="tx_name_latitude">latitude</string>
+    <string name="tv_name_accY">accY</string>
 </resources>

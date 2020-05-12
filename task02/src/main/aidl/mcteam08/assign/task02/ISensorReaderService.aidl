@@ -11,5 +11,6 @@ interface ISensorReaderService {
     String getHelloWorld();
     float[] getSensorGyroscope();
     float[] getSensorAccelerometer();
+    double[] getLocation();
     int setSamplePeriod(int period);
 }

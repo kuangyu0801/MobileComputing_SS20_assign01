@@ -12,7 +12,9 @@
         <service
             android:name=".SensorReaderService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true"
+            ></service>
+
 
         <activity
             android:name=".Task02"
@@ -26,6 +28,7 @@
         </activity>
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
