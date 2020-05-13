@@ -30,6 +30,7 @@ public class Task01 extends AppCompatActivity {
     final private String TAG = Task01.class.getCanonicalName();
     private Button[] numButtons = new Button[10];
     private Button[] optButtons = new Button[5]; // =, +, -, *, /
+    // TODO: change to unicode symbol
     final private String[] OPT = new String[] {"ADD", "SUB", "MUL", "DIV", "EQU"};
     final private HashSet<String> OPTSET = new HashSet<>(Arrays.asList(OPT));
     private Button clearButton;
@@ -59,7 +60,7 @@ public class Task01 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task01);
         textViewDisplay = findViewById(R.id.textViewDisplay);
-
+        // TODO: solve consecutive 0 problem
         numButtons[0] = findViewById(R.id.buttonNum0);
         numButtons[0].setOnClickListener(new View.OnClickListener(){
             @Override
