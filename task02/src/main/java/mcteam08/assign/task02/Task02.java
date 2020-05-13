@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 public class Task02 extends AppCompatActivity implements ServiceConnection {
+    // TODO: add timer in Task02 Activity
     final private static int MY_PERMISSION_REQUEST_FINE_LOCATION = 1; // request
     final private String TAG = Task02.class.getCanonicalName();
     private ISensorReaderService sensorReaderProxy = null;
@@ -75,11 +76,11 @@ public class Task02 extends AppCompatActivity implements ServiceConnection {
                     Log.i(TAG, " latitude : " + gpsStatics[0]);
                     Log.i(TAG, " longitude : " + gpsStatics[1]);
 
-                    textViewAccs[0].setText(Float.toString(accStatics[0]));
-                    textViewAccs[1].setText(Float.toString(accStatics[1]));
-                    textViewAccs[2].setText(Float.toString(accStatics[2]));
-                    textViewGPS[0].setText(Double.toString(gpsStatics[0]));
-                    textViewGPS[1].setText(Double.toString(gpsStatics[1]));
+                    textViewAccs[0].setText("X-axis: " + Float.toString(accStatics[0]));
+                    textViewAccs[1].setText("Y-axis: " + Float.toString(accStatics[1]));
+                    textViewAccs[2].setText("Z-axis: " + Float.toString(accStatics[2]));
+                    textViewGPS[0].setText("longitude: " + Double.toString(gpsStatics[0]));
+                    textViewGPS[1].setText("latitude:" + Double.toString(gpsStatics[1]));
 
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -129,6 +130,8 @@ public class Task02 extends AppCompatActivity implements ServiceConnection {
         sensorReaderProxy = null;
     }
 
+    // TODO: try to solve the dialog keep popping up
+    // reference: https://www.androhub.com/show-location-setting-dialog-using-google-api-client/
     private void enableLocationSettings() {
         new AlertDialog.Builder(this)
                 .setTitle("Enable GPS")

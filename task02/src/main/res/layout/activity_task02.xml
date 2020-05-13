@@ -38,7 +38,7 @@
 
     <TextView
         android:id="@+id/textViewAccZ"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="25dp"
         android:layout_marginTop="24dp"
         android:text="@string/tv_name_accZ"
@@ -49,7 +49,7 @@
 
     <TextView
         android:id="@+id/textViewAccX"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="25dp"
         android:layout_marginTop="32dp"
         android:text="@string/tv_name_accX"
@@ -60,7 +60,7 @@
 
     <TextView
         android:id="@+id/textViewAccY"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="25dp"
         android:layout_marginTop="20dp"
         android:text="@string/tv_name_accY"
@@ -73,10 +73,10 @@
         android:id="@+id/textViewLatitude"
         android:layout_width="250dp"
         android:layout_height="25dp"
-        android:layout_marginTop="92dp"
+        android:layout_marginTop="80dp"
         android:text="@string/tx_name_latitude"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.202"
+        app:layout_constraintHorizontal_bias="0.167"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewAccY" />
 
@@ -84,10 +84,10 @@
         android:id="@+id/textViewLongitude"
         android:layout_width="250dp"
         android:layout_height="25dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="24dp"
         android:text="@string/tv_name_longitude"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.202"
+        app:layout_constraintHorizontal_bias="0.167"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewLatitude" />
 
