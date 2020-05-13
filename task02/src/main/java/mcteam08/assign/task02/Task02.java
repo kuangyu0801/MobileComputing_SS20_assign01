@@ -17,70 +17,85 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Task02 extends AppCompatActivity implements ServiceConnection {
+
     final private String TAG = Task02.class.getCanonicalName();
-    private ISensorReaderService sensorReaderProxy = null;
+
+    private ISensorService sensorServiceProxy = null;
+
+    private Timer timer = new Timer();
+    private TimerTask task;
+
+    private TextView accelerometerX;
+    private TextView accelerometerY;
+    private TextView accelerometerZ;
+    private TextView gyroscopeX;
+    private TextView gyroscopeY;
+    private TextView gyroscopeZ;
+
+    final private int samplingPeriod = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "Activity Created");
         setContentView(R.layout.activity_task02);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        Intent i = new Intent(this, SensorService.class);
+        startService(i);
+        bindService(i, this, BIND_AUTO_CREATE);
+
+        accelerometerX = findViewById(R.id.accelerometerX);
+        accelerometerY = findViewById(R.id.accelerometerY);
+        accelerometerZ = findViewById(R.id.accelerometerZ);
+        gyroscopeX = findViewById(R.id.gyroscopeX);
+        gyroscopeY = findViewById(R.id.gyroscopeY);
+        gyroscopeZ = findViewById(R.id.gyroscopeZ);
+
+        task = new TimerTask() {
             @Override
-            public void onClick(View view) {
-                String str = null;
+            public void run() {
+                String[] acc;
+                String[] gyro;
+
                 try {
-                    str = sensorReaderProxy.getHelloWorld();
-                } catch (RemoteException e) {
+                    acc = sensorServiceProxy.getAccelerometer();
+                    accelerometerX.setText(acc[0]);
+                    accelerometerY.setText(acc[1]);
+                    accelerometerZ.setText(acc[2]);
+                    gyro = sensorServiceProxy.getGyroscope();
+                    gyroscopeX.setText(gyro[0]);
+                    gyroscopeY.setText(gyro[1]);
+                    gyroscopeZ.setText(gyro[2]);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Snackbar.make(view, str, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
-        });
-
-        Intent i = new Intent(this, SensorReaderService.class);
-        bindService(i, this, BIND_AUTO_CREATE);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_task02, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        };
     }
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         Log.i(TAG, "Service connected");
-        sensorReaderProxy = ISensorReaderService.Stub.asInterface(service);
+        sensorServiceProxy = ISensorService.Stub.asInterface(service);
+
+        timer.schedule(task,0, samplingPeriod);
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
         Log.i(TAG, "Service disconnected");
-        sensorReaderProxy = null;
+        sensorServiceProxy = null;
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.i(TAG, "Activity destroyed");
+        super.onDestroy();
+        unbindService(this);
     }
 }
