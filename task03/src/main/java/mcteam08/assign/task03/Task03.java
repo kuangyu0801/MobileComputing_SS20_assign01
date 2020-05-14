@@ -1,5 +1,6 @@
 package mcteam08.assign.task03;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -8,11 +9,16 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 public class Task03 extends AppCompatActivity {
+    final private static String TAG = Task03.class.getCanonicalName();
+
+    Button startButton, stopButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,15 +26,26 @@ public class Task03 extends AppCompatActivity {
         setContentView(R.layout.activity_task03);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        startButton = findViewById(R.id.button0);
+        stopButton = findViewById(R.id.button1);
+        final Intent iDS = new Intent(this, DownloaderService.class);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        startButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+                Log.i(TAG, "Start service");
+                startService(iDS);
             }
         });
+
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopService(iDS);
+            }
+        });
+
     }
 
     @Override
