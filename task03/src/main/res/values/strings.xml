@@ -10,5 +10,5 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="button0">Start Download</string>
-    <string name="button1">Stop Download</string>
+    <string name="button1">Test Broadcast</string>
 </resources>

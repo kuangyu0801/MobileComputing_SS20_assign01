@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -15,6 +17,8 @@ import java.net.URLConnection;
 
 public class DownloaderService extends Service {
     final private static String TAG = DownloaderService.class.getCanonicalName();
+    final private static String ACTION_DOWNLOADER_BROADCAST = BuildConfig.APPLICATION_ID + "ACTION_DOWNLOADER_BROADCAST";
+
     private URL sourceVideo = new URL("https://drive.google.com/uc?id=1WAi7vvbAwodbBhkEftAQsf3Kv2thFZeV&export=download");
     private URL sourcePhoto = new URL("https://drive.google.com/uc?id=1TKPT65RAA8cchYocaF4J6YNJvZJrvwXE&export=download");
     private URL source = new URL("https://drive.google.com/file/d/1NnG-KfCma6Bn1OIEDPms4GPY_Quj8TWb/view");
@@ -51,6 +55,12 @@ public class DownloaderService extends Service {
     public void download() {
         DownTask task = new DownTask(this);
         task.execute(source);
+    }
+
+    private void sendDownloaderBroadcast() {
+        Log.i(TAG, "Send download complete broadcast");
+        Intent i0 = new Intent(ACTION_DOWNLOADER_BROADCAST);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(i0);
     }
 
     class DownTask extends AsyncTask<URL, Integer, String>
@@ -93,6 +103,7 @@ public class DownloaderService extends Service {
             // 返回HTML页面的内容
             // 设置进度条不可见
             Log.i(TAG, "Download task post-processing in main thread");
+            sendDownloaderBroadcast();
         }
 
         @Override
@@ -107,4 +118,5 @@ public class DownloaderService extends Service {
 
         }
     }
+
 }
