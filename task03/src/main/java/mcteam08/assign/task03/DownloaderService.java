@@ -105,8 +105,6 @@ public class DownloaderService extends Service {
 
                 URLConnection conn = params[0].openConnection();
                 conn.connect();
-                // this will be useful so that you can show a tipical 0-100% progress bar
-                int lenghtOfFile = conn.getContentLength();
 
                 // download the file
                 InputStream input = new BufferedInputStream(params[0].openStream(), 8192);
@@ -123,7 +121,7 @@ public class DownloaderService extends Service {
                     total += count;
                     // publishing the progress....
                     // After this onProgressUpdate will be called
-                    publishProgress((int)((total*100)/lenghtOfFile));
+                    publishProgress((int)(total/1000));
 
                     // writing data to file
                     output.write(data, 0, count);
@@ -157,7 +155,8 @@ public class DownloaderService extends Service {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            Log.i(TAG, "Download" + values + "%");
+            String log = values[0].toString() + " kB downloaded";
+            Log.i(TAG, log);
             // 更新进度
 
         }
