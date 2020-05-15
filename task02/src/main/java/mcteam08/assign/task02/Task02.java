@@ -2,9 +2,12 @@ package mcteam08.assign.task02;
 
 import android.Manifest;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -59,13 +62,15 @@ public class Task02 extends AppCompatActivity implements ServiceConnection {
         textViewGPS[0] = findViewById(R.id.textViewLatitude);
         textViewGPS[1] = findViewById(R.id.textViewLongitude);
         setSupportActionBar(toolbar);
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+            enableLocationSettings();
         requestLocationPermission();
 
         startReceive = findViewById(R.id.button);
         stopReceive = findViewById(R.id.button2);
-        i0 = new Intent(this, SensorReaderService.class);
-        startService(i0);
-        bindService(i0, this, BIND_AUTO_CREATE);
+
         timerScheduled = false;
     }
 
@@ -73,6 +78,10 @@ public class Task02 extends AppCompatActivity implements ServiceConnection {
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "Activity started");
+
+        i0 = new Intent(this, SensorReaderService.class);
+        startService(i0);
+        bindService(i0, this, BIND_AUTO_CREATE);
 
         startReceive.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,4 +183,21 @@ public class Task02 extends AppCompatActivity implements ServiceConnection {
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 MY_PERMISSION_REQUEST_FINE_LOCATION);
     }
+
+    private void enableLocationSettings() {
+        new AlertDialog.Builder(this)
+                .setTitle("Enable GPS")
+                .setMessage("GPS currently disabled. Do you want to enable GPS?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(settingsIntent);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
 }

@@ -114,6 +114,11 @@ public class SensorReaderService extends Service implements SensorEventListener,
         Log.i(TAG, "Create Service");
         super.onCreate();
         impl = new SensorReaderServiceImpl();
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         samplePeriod = DEFAULT_SAMPLE_PERIOD;
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorGryro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
@@ -150,12 +155,13 @@ public class SensorReaderService extends Service implements SensorEventListener,
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE,this);
             }
         }
+        return super.onStartCommand(intent, flags, startId);
     }
-
 
     @Override
     public IBinder onBind(Intent intent) {
         Log.i(TAG, "Bind Service");
+
         return impl;
     }
 
