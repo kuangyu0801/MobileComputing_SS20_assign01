@@ -6,4 +6,5 @@ package mcteam08.assign.task02;
 interface ISensorService {
     String[] getAccelerometer();
     String[] getGyroscope();
+    String[] getGPS();
 }
