@@ -39,6 +39,9 @@ public class Task03 extends AppCompatActivity {
         setSupportActionBar(toolbar);
         startButton = findViewById(R.id.button0);
         stopButton = findViewById(R.id.button1);
+
+        // Setting intent filter so that only this app can lister to the broadcast
+        // this is require in Android version xx
         final Intent iDS = new Intent(this, DownloaderService.class);
         IntentFilter iFilter = new IntentFilter(ACTION_DOWNLOADER_BROADCAST);
         LocalBroadcastManager.getInstance(this).registerReceiver(dReceiver, iFilter);
