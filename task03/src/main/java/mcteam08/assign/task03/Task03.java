@@ -1,5 +1,6 @@
 package mcteam08.assign.task03;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.Button;
 
 public class Task03 extends AppCompatActivity {
     final private static String TAG = Task03.class.getCanonicalName();
+    final private static int MY_PERMISSION_REQUEST_READ_WRITE_EXTERNAL_STORAGE = 1;
 
     // Starting from Android 8.0 (API level 26 and higher),
     // you can't use static receivers to receive most Android system broadcasts
@@ -31,6 +33,7 @@ public class Task03 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_task03);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -39,6 +42,8 @@ public class Task03 extends AppCompatActivity {
         final Intent iDS = new Intent(this, DownloaderService.class);
         IntentFilter iFilter = new IntentFilter(ACTION_DOWNLOADER_BROADCAST);
         LocalBroadcastManager.getInstance(this).registerReceiver(dReceiver, iFilter);
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                MY_PERMISSION_REQUEST_READ_WRITE_EXTERNAL_STORAGE);
 
         startButton.setOnClickListener(new View.OnClickListener() {
 
@@ -46,7 +51,6 @@ public class Task03 extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "Start service");
                 startService(iDS);
-                //Toast.makeText(Task03.this, "Download complete", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -55,10 +59,10 @@ public class Task03 extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "Send broadcast");
                 sendDownloaderBroadcast();
-                stopService(iDS);
             }
         });
 
+        Log.i(TAG, "Activity created");
     }
 
     @Override
@@ -91,7 +95,9 @@ public class Task03 extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        Log.i(TAG, "Activity destroyed");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(dReceiver);
         super.onDestroy();
     }
+
 }
