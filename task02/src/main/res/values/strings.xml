@@ -17,4 +17,6 @@
     <string name="tv_name_longitude">longitude</string>
     <string name="tx_name_latitude">latitude</string>
     <string name="tv_name_accY">accY</string>
+    <string name="bn_name">Start Receive</string>
+    <string name="bn_name2">Stop Receive</string>
 </resources>

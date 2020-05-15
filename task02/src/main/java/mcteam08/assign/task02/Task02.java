@@ -22,24 +22,35 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Task02 extends AppCompatActivity implements ServiceConnection {
-    // TODO: add timer in Task02 Activity
+    // DONE: add timer in Task02 Activity
     final private static int MY_PERMISSION_REQUEST_FINE_LOCATION = 1; // request
+    final private int samplingPeriod = 5000; // 5 second
+
     final private String TAG = Task02.class.getCanonicalName();
     private ISensorReaderService sensorReaderProxy = null;
     private TextView[] textViewAccs = new TextView[3];
     private TextView[] textViewGPS = new TextView[2];
-    float[] gyroStatics = new float[3], accStatics = new float[3];
-    double[] gpsStatics = new double[2];
-    private TextView textViewAccsX;
+    private float[] gyroStatics = new float[3];
+    private float[] accStatics = new float[3];
+    private double[] gpsStatics = new double[2];
+    private Button startReceive, stopReceive;
+    private Intent i0;
+    private Timer timer;
+    private TimerTask task;
+    private boolean timerScheduled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "Activity Created");
+        Log.i(TAG, "Activity created");
         setContentView(R.layout.activity_task02);
         Toolbar toolbar = findViewById(R.id.toolbar);
         textViewAccs[0] = findViewById(R.id.textViewAccX);
@@ -48,52 +59,80 @@ public class Task02 extends AppCompatActivity implements ServiceConnection {
         textViewGPS[0] = findViewById(R.id.textViewLatitude);
         textViewGPS[1] = findViewById(R.id.textViewLongitude);
         setSupportActionBar(toolbar);
-        enableLocationSettings();
         requestLocationPermission();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        startReceive = findViewById(R.id.button);
+        stopReceive = findViewById(R.id.button2);
+        i0 = new Intent(this, SensorReaderService.class);
+        startService(i0);
+        bindService(i0, this, BIND_AUTO_CREATE);
+        timerScheduled = false;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "Activity started");
+
+        startReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String str = null;
-                try {
-                    str = sensorReaderProxy.getHelloWorld();
-                    gyroStatics = sensorReaderProxy.getSensorGyroscope();
-                    Log.i(TAG, "Receive Gyroscope Statics: ");
-                    Log.i(TAG, " X-axis: " + gyroStatics[0]);
-                    Log.i(TAG, " Y-axis: " + gyroStatics[1]);
-                    Log.i(TAG, " Z-axis: " + gyroStatics[2]);
+                Log.i(TAG, "Start receive");
+                if (!timerScheduled) {
 
-                    accStatics = sensorReaderProxy.getSensorAccelerometer();
-                    Log.i(TAG, "Receive Accelerometer Statics: ");
-                    Log.i(TAG, " X-axis: " + accStatics[0]);
-                    Log.i(TAG, " Y-axis: " + accStatics[1]);
-                    Log.i(TAG, " Z-axis: " + accStatics[2]);
+                    // schedule a timertask to receive result from service
+                    // need to create new timertask every time we need to reschedule
+                    task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                gyroStatics = sensorReaderProxy.getSensorGyroscope();
+                                Log.i(TAG, "Receive Gyroscope Statics: ");
 
+                                accStatics = sensorReaderProxy.getSensorAccelerometer();
+                                Log.i(TAG, "Receive Accelerometer Statics: ");
 
-                    gpsStatics = sensorReaderProxy.getLocation();
-                    Log.i(TAG, "Receive GPS Statics: ");
-                    Log.i(TAG, " latitude : " + gpsStatics[0]);
-                    Log.i(TAG, " longitude : " + gpsStatics[1]);
+                                gpsStatics = sensorReaderProxy.getLocation();
+                                Log.i(TAG, "Receive GPS Statics: ");
 
-                    textViewAccs[0].setText("X-axis: " + Float.toString(accStatics[0]));
-                    textViewAccs[1].setText("Y-axis: " + Float.toString(accStatics[1]));
-                    textViewAccs[2].setText("Z-axis: " + Float.toString(accStatics[2]));
-                    textViewGPS[0].setText("longitude: " + Double.toString(gpsStatics[0]));
-                    textViewGPS[1].setText("latitude:" + Double.toString(gpsStatics[1]));
-
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+                                textViewAccs[0].setText("X-axis: " + (Float.toString(accStatics[0])));
+                                textViewAccs[1].setText("Y-axis: " + Float.toString(accStatics[1]));
+                                textViewAccs[2].setText("Z-axis: " + Float.toString(accStatics[2]));
+                                textViewGPS[0].setText("Longitude: " + Double.toString(gpsStatics[0]));
+                                textViewGPS[1].setText("Latitude:" + Double.toString(gpsStatics[1]));
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    timer = new Timer();
+                    timer.schedule(task, 0, samplingPeriod);
+                    timerScheduled = true;
                 }
-                Snackbar.make(view, str, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
             }
         });
 
+        stopReceive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Stop receive");
+                if (timerScheduled) {
+                    // cancel all future tasks
+                    timer.cancel();
+                    // purge all scheduled tasks
+                    timer.purge();
+                    timerScheduled = false;
+                }
 
-        Intent i = new Intent(this, SensorReaderService.class);
-        bindService(i, this, BIND_AUTO_CREATE);
+            }
+        });
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "Activity destroyed");
     }
 
     @Override
@@ -128,24 +167,6 @@ public class Task02 extends AppCompatActivity implements ServiceConnection {
     public void onServiceDisconnected(ComponentName name) {
         Log.i(TAG, "Service disconnected");
         sensorReaderProxy = null;
-    }
-
-    // TODO: try to solve the dialog keep popping up
-    // reference: https://www.androhub.com/show-location-setting-dialog-using-google-api-client/
-    private void enableLocationSettings() {
-        new AlertDialog.Builder(this)
-                .setTitle("Enable GPS")
-                .setMessage("GPS currently disabled. Do you want to enable GPS?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(settingsIntent);
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
     }
 
     private void requestLocationPermission() {
