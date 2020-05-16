@@ -95,9 +95,6 @@ public class Task02 extends AppCompatActivity implements ServiceConnection {
                         @Override
                         public void run() {
                             try {
-                                gyroStatics = sensorReaderProxy.getSensorGyroscope();
-                                Log.i(TAG, "Receive Gyroscope Statics: ");
-
                                 accStatics = sensorReaderProxy.getSensorAccelerometer();
                                 Log.i(TAG, "Receive Accelerometer Statics: ");
 
@@ -141,6 +138,9 @@ public class Task02 extends AppCompatActivity implements ServiceConnection {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        unbindService(this);
+
         Log.i(TAG, "Activity destroyed");
     }
 

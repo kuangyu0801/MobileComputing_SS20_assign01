@@ -22,14 +22,12 @@ import androidx.core.content.ContextCompat;
 
 public class SensorReaderService extends Service implements SensorEventListener, LocationListener {
     final private static String TAG = SensorReaderService.class.getCanonicalName();
-    final private static int DEFAULT_SAMPLE_PERIOD = 10000; // 10 seconds
-    final private static long MIN_TIME = 10000; // 10 seconds
+    final private static long MIN_TIME = 5000; // 5 seconds
     final private static long MIN_DISTANCE = 1; // 1 meter
 
-    private int samplePeriod;
     private SensorReaderServiceImpl impl;
     private SensorManager sensorManager;
-    private Sensor sensorGryro, sensorAcc;
+    private Sensor sensorAcc;
     private LocationManager locationManager;
     private float[] dataGyro = new float[3];
     private float[] dataAcc = new float[3];
@@ -37,18 +35,10 @@ public class SensorReaderService extends Service implements SensorEventListener,
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        dataAcc[0] = sensorEvent.values[0];
+        dataAcc[1] = sensorEvent.values[1];
+        dataAcc[2] = sensorEvent.values[2];
 
-        if (sensorEvent.sensor.equals(sensorGryro)) {
-            // Log.i(TAG, "Gyroscope Changed");
-            dataGyro[0] = sensorEvent.values[0];
-            dataGyro[1] = sensorEvent.values[1];
-            dataGyro[2] = sensorEvent.values[2];
-        } else if (sensorEvent.sensor.equals(sensorAcc)) {
-            // Log.i(TAG, "Accelerometer Changed");
-            dataAcc[0] = sensorEvent.values[0];
-            dataAcc[1] = sensorEvent.values[1];
-            dataAcc[2] = sensorEvent.values[2];
-        }
     }
 
     @Override
@@ -78,16 +68,6 @@ public class SensorReaderService extends Service implements SensorEventListener,
     }
 
     private class SensorReaderServiceImpl extends ISensorReaderService.Stub {
-        @Override
-        public String getHelloWorld() throws RemoteException {
-            return "This is Hello World from SensorReaderService";
-        }
-
-        @Override
-        public float[] getSensorGyroscope() throws RemoteException {
-            Log.i(TAG, "Get Statics from Gyroscope");
-            return dataGyro;
-        }
 
         @Override
         public float[] getSensorAccelerometer() throws RemoteException {
@@ -100,13 +80,7 @@ public class SensorReaderService extends Service implements SensorEventListener,
             Log.i(TAG, "Get Statics from GPS");
             return dataLocation;
         }
-        @Override
-        public int setSamplePeriod(int period) throws RemoteException {
-            Log.i(TAG, "Set Sample Period");
-            int prevPeriod = samplePeriod;
-            samplePeriod = period;
-            return prevPeriod;
-        }
+
     }
 
     @Override
@@ -119,18 +93,10 @@ public class SensorReaderService extends Service implements SensorEventListener,
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        samplePeriod = DEFAULT_SAMPLE_PERIOD;
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensorGryro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         sensorAcc = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);;
         final boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-        if (sensorManager.registerListener(this, sensorGryro, SensorManager.SENSOR_DELAY_NORMAL)) {
-            Log.i(TAG, "GYROSCOPE Registered");
-        } else {
-            Log.i(TAG, "GYROSCOPE Not Registered");
-        }
 
         if (sensorManager.registerListener(this, sensorAcc, SensorManager.SENSOR_DELAY_NORMAL)) {
             Log.i(TAG, "ACCELEROMETER Registered");

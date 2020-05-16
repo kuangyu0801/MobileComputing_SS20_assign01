@@ -8,9 +8,6 @@ interface ISensorReaderService {
      * Demonstrates some basic types that you can use as parameters
      * and return values in AIDL.
      */
-    String getHelloWorld();
-    float[] getSensorGyroscope();
     float[] getSensorAccelerometer();
     double[] getLocation();
-    int setSamplePeriod(int period);
 }
