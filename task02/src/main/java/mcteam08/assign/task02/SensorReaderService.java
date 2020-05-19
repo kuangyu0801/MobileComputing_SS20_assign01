@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 public class SensorReaderService extends Service implements SensorEventListener, LocationListener {
     final private static String TAG = SensorReaderService.class.getCanonicalName();
     final private static long MIN_TIME = 5000; // 5 seconds
+    final private static int MIN_TIME_ACC = 5000000; // 5 seconds
     final private static long MIN_DISTANCE = 1; // 1 meter
 
     private SensorReaderServiceImpl impl;
@@ -98,7 +99,7 @@ public class SensorReaderService extends Service implements SensorEventListener,
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);;
         final boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-        if (sensorManager.registerListener(this, sensorAcc, SensorManager.SENSOR_DELAY_NORMAL)) {
+        if (sensorManager.registerListener(this, sensorAcc, MIN_TIME_ACC)) {
             Log.i(TAG, "ACCELEROMETER Registered");
         } else {
             Log.i(TAG, "ACCELEROMETER Not Registered");
