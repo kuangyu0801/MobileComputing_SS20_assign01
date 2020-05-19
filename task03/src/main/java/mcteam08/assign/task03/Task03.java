@@ -45,7 +45,7 @@ public class Task03 extends AppCompatActivity {
         final Intent iDS = new Intent(this, DownloaderService.class);
         IntentFilter iFilter = new IntentFilter(ACTION_DOWNLOADER_BROADCAST);
         LocalBroadcastManager.getInstance(this).registerReceiver(dReceiver, iFilter);
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                 MY_PERMISSION_REQUEST_READ_WRITE_EXTERNAL_STORAGE);
 
         startButton.setOnClickListener(new View.OnClickListener() {
